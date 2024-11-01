@@ -1,0 +1,44 @@
+services:
+  node1:
+    image: mpi1
+    container_name: node1
+    hostname: node1
+    # specify which virtual network this container will belong to
+    networks:
+      - mpi-network
+    # start the ssh service so that other containers can connect to us && wait forever
+    command: /bin/bash -c "
+      service ssh start && 
+      tail -f /dev/null"
+    # allow the container to access the mpi_files directory on the host system from the container directory "/home/mpi/mpi_files/" 
+    volumes:
+      - ./mpi_files:/home/mpi/mpi_files/
+
+  node2:
+    image: mpi1
+    container_name: node2
+    hostname: node2
+    networks:
+      - mpi-network
+    command: /bin/bash -c "
+      service ssh start &&
+      tail -f /dev/null"
+    volumes:
+      - ./mpi_files:/home/mpi/mpi_files/
+
+  node3:
+    image: mpi1
+    container_name: node3
+    hostname: node3
+    networks:
+      - mpi-network
+    command: /bin/bash -c "
+      service ssh start &&
+      tail -f /dev/null"
+    volumes:
+      - ./mpi_files:/home/mpi/mpi_files/
+
+# create a virtual docker network
+networks:
+  mpi-network:
+    driver: bridge

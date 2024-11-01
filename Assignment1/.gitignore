@@ -1,0 +1,5 @@
+# Binary Folder
+/src/bin/
+/src/mpi_files/
+
+*.zip
