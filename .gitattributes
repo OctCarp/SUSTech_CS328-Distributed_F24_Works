@@ -1,4 +1,9 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+# .tex files as documentation
+*.tex linguist-documentation
+
+# Binary files
 *.png binary
+*.pdf binary

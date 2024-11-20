@@ -1,3 +1,10 @@
+# Ignore all IDE editor folders
+**/.idea/
+**/.vscode/
+
+# Ignore all temporary files
+**/temp/
+
 # Prerequisites
 *.d
 
@@ -50,3 +57,4 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
