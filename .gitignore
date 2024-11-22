@@ -58,3 +58,8 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+### python ###
+*.py[cod]
+*.pyo
+*.pyd
+__pycache__/

@@ -1,0 +1,128 @@
+syntax = "proto3";
+
+package dbs;
+
+option go_package = "dbs/pb";
+
+// Product related messages
+message Product {
+  int32 id = 1;
+  string name = 2;
+  string description = 3;
+  string category = 4;
+  double price = 5;
+  string slogan = 6;
+  int32 stock = 7;
+  string created_at = 8;
+}
+
+message GetProductRequest {
+  int32 product_id = 1;
+}
+
+message ListProductsRequest {
+}
+
+message ListProductsResponse {
+  repeated Product products = 1;
+}
+
+// User related messages
+message User {
+  int32 id = 1;
+  string sid = 2;
+  string username = 3;
+  string email = 4;
+  string password_hash = 5;
+  string created_at = 6;
+}
+
+message CreateUserRequest {
+  string sid = 1;
+  string username = 2;
+  string email = 3;
+  string password_hash = 4;
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message GetUserRequest {
+  int32 user_id = 1;
+}
+
+message GetUserByUsernameRequest {
+  string username = 1;
+}
+
+message UpdateUserRequest {
+  int32 user_id = 1;
+  string email = 2;
+}
+
+message DeactivateUserRequest {
+  int32 user_id = 1;
+}
+
+// Order related messages
+message Order {
+  int32 id = 1;
+  int32 user_id = 2;
+  int32 product_id = 3;
+  int32 quantity = 4;
+  double total_price = 5;
+  string created_at = 6;
+  string product_name = 7;
+  string username = 8;
+}
+
+message CreateOrderRequest {
+  int32 user_id = 1;
+  int32 product_id = 2;
+  int32 quantity = 3;
+}
+
+message GetOrderRequest {
+  int32 order_id = 1;
+}
+
+message CancelOrderRequest {
+  int32 order_id = 1;
+}
+
+// Common response messages
+message StatusResponse {
+  int32 status_code = 1;
+  string message = 2;
+}
+
+message IdResponse {
+  int32 id = 1;
+}
+
+message UserOrdersResponse {
+  repeated Order orders = 1;
+}
+
+// Database Service definition
+service DatabaseService {
+  // Product operations
+  rpc GetProduct(GetProductRequest) returns (Product);
+  rpc ListProducts(ListProductsRequest) returns (ListProductsResponse);
+
+  // User operations
+  rpc CreateUser(CreateUserRequest) returns (StatusResponse);
+  rpc Login(LoginRequest) returns (StatusResponse);
+  rpc GetUser(GetUserRequest) returns (User);
+  rpc GetUserByUsername(GetUserByUsernameRequest) returns (User);
+  rpc UpdateUser(UpdateUserRequest) returns (StatusResponse);
+  rpc DeactivateUser(DeactivateUserRequest) returns (StatusResponse);
+
+  // Order operations
+  rpc CreateOrder(CreateOrderRequest) returns (StatusResponse);
+  rpc GetOrder(GetOrderRequest) returns (Order);
+  rpc CancelOrder(CancelOrderRequest) returns (StatusResponse);
+  rpc GetUserOrders(GetUserRequest) returns (UserOrdersResponse);
+}

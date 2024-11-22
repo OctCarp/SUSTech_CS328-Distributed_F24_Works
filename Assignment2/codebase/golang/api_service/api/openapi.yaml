@@ -1,0 +1,626 @@
+openapi: 3.0.4
+info:
+  contact:
+    email: 12110304@mail.sustech.edu.cn
+    name: XU's CS328 Assignment 2
+    url: https://github.com/OctCarp/SUSTech_CS328-Distributed_F24_Works
+  description: API service for SUSTech Store
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  title: SUSTech Store API
+  version: 0.1.0
+servers:
+  - description: Development server for SUSTech Store API
+    url: http://localhost:13282
+tags:
+  - description: Welcome message API
+    name: General
+  - description: Product management APIs
+    name: Products
+  - description: User management APIs
+    name: Users
+  - description: Order management APIs
+    name: Orders
+paths:
+  /:
+    get:
+      operationId: getWelcomeMessage
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Successful operation
+      summary: Get welcome message
+      tags:
+        - General
+  /products:
+    get:
+      operationId: listProducts
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Product'
+                type: array
+          description: List of products
+      summary: List all products
+      tags:
+        - Products
+  /products/{id}:
+    get:
+      operationId: getProduct
+      parameters:
+        - explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+          description: Product details
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Resource not found
+      summary: Get product by ID
+      tags:
+        - Products
+  /users/register:
+    post:
+      operationId: registerUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: User created successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Bad request
+      summary: Register new user
+      tags:
+        - Users
+  /users/login:
+    post:
+      operationId: loginUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+          description: Login successful
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Unauthorized access
+      summary: User login
+      tags:
+        - Users
+  /users/{id}:
+    delete:
+      operationId: deactivateUser
+      parameters:
+        - explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Successful operation
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Unauthorized access
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Resource not found
+      security:
+        - BearerAuth: [ ]
+      summary: Deactivate user
+      tags:
+        - Users
+    get:
+      operationId: getUser
+      parameters:
+        - explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: User profile
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Unauthorized access
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Resource not found
+      security:
+        - BearerAuth: [ ]
+      summary: Get user profile
+      tags:
+        - Users
+    put:
+      operationId: updateUser
+      parameters:
+        - explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: User updated successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Unauthorized access
+      security:
+        - BearerAuth: [ ]
+      summary: Update user profile
+      tags:
+        - Users
+  /orders:
+    post:
+      operationId: placeOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: Order created successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Unauthorized access
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Resource not found
+      security:
+        - BearerAuth: [ ]
+      summary: Place new order
+      tags:
+        - Orders
+  /orders/user/{id}:
+    get:
+      operationId: getUserOrdersById
+      parameters:
+        - explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Order'
+                type: array
+          description: List of orders
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Unauthorized access
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Resource not found
+      security:
+        - BearerAuth: [ ]
+      summary: Get user's orders by ID
+      tags:
+        - Orders
+  /orders/{id}:
+    delete:
+      operationId: cancelOrder
+      parameters:
+        - explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Successful operation
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Unauthorized access
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Resource not found
+      security:
+        - BearerAuth: [ ]
+      summary: Cancel order
+      tags:
+        - Orders
+    get:
+      operationId: getOrder
+      parameters:
+        - explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: Order details
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Unauthorized access
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Resource not found
+      security:
+        - BearerAuth: [ ]
+      summary: Get order by ID
+      tags:
+        - Orders
+components:
+  responses:
+    SuccessResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Message'
+      description: Successful operation
+    NotFoundResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Message'
+      description: Resource not found
+    UnauthorizedResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Message'
+      description: Unauthorized access
+    BadRequestResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Message'
+      description: Bad request
+  schemas:
+    Message:
+      example:
+        message: "Hello, world!"
+      properties:
+        message:
+          example: "Hello, world!"
+          type: string
+      type: object
+    Product:
+      example:
+        price: 49.99
+        name: SUSTech Hoodie
+        description: "A cozy, stylish hoodie featuring the official SUSTech logo"
+        created_at: 2024-03-20T08:00:00Z
+        id: 1
+        category: Apparel
+        stock: 500
+        slogan: "Stay warm, stay proud!"
+      properties:
+        id:
+          example: 1
+          type: integer
+        name:
+          example: SUSTech Hoodie
+          type: string
+        description:
+          example: "A cozy, stylish hoodie featuring the official SUSTech logo"
+          type: string
+        category:
+          example: Apparel
+          type: string
+        price:
+          example: 49.99
+          format: float
+          type: number
+        slogan:
+          example: "Stay warm, stay proud!"
+          type: string
+        stock:
+          example: 500
+          type: integer
+        created_at:
+          example: 2024-03-20T08:00:00Z
+          format: date-time
+          type: string
+      type: object
+    RegisterUserRequest:
+      example:
+        password: Password123
+        email: 12110304@mail.sustech.edu.cn
+        sid: "12110304"
+        username: john_doe
+      properties:
+        sid:
+          description: Student ID must be 8 digits
+          example: "12110304"
+          pattern: "^\\d{8}$"
+          type: string
+        username:
+          example: john_doe
+          type: string
+        email:
+          description: Valid email address
+          example: 12110304@mail.sustech.edu.cn
+          format: email
+          pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+          type: string
+        password:
+          example: Password123
+          format: password
+          type: string
+      required:
+        - password
+        - sid
+        - username
+      type: object
+    LoginRequest:
+      example:
+        password: "123"
+        username: johndoe
+      properties:
+        username:
+          example: johndoe
+          type: string
+        password:
+          example: "123"
+          type: string
+      required:
+        - password
+        - username
+      type: object
+    LoginResponse:
+      example:
+        user:
+          created_at: 2024-03-20T08:00:00Z
+          id: 1
+          email: 12110304@mail.sustech.edu.cn
+          sid: "12110304"
+          username: johndoe
+        token: exsanojw
+      properties:
+        token:
+          example: exsanojw
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+      type: object
+    User:
+      example:
+        created_at: 2024-03-20T08:00:00Z
+        id: 1
+        email: 12110304@mail.sustech.edu.cn
+        sid: "12110304"
+        username: johndoe
+      properties:
+        id:
+          example: 1
+          type: integer
+        sid:
+          example: "12110304"
+          type: string
+        username:
+          example: johndoe
+          type: string
+        email:
+          example: 12110304@mail.sustech.edu.cn
+          format: email
+          pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+          type: string
+        created_at:
+          example: 2024-03-20T08:00:00Z
+          format: date-time
+          type: string
+      type: object
+    UpdateUserRequest:
+      example:
+        email: newemail@mail.sustech.edu.cn
+        username: johndoe2
+      properties:
+        username:
+          example: johndoe2
+          type: string
+        email:
+          example: newemail@mail.sustech.edu.cn
+          format: email
+          pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+          type: string
+      type: object
+    CreateOrderRequest:
+      example:
+        quantity: 2
+        product_id: 1
+      properties:
+        product_id:
+          example: 1
+          type: integer
+        quantity:
+          example: 2
+          maximum: 3
+          minimum: 1
+          type: integer
+      required:
+        - product_id
+        - quantity
+      type: object
+    Order:
+      example:
+        product:
+          price: 49.99
+          name: SUSTech Hoodie
+          description: "A cozy, stylish hoodie featuring the official SUSTech logo"
+          created_at: 2024-03-20T08:00:00Z
+          id: 1
+          category: Apparel
+          stock: 500
+          slogan: "Stay warm, stay proud!"
+        quantity: 2
+        total_price: 99.98
+        user_id: 1
+        product_id: 1
+        created_at: 2024-03-20T08:30:00Z
+        id: 1
+      properties:
+        id:
+          example: 1
+          type: integer
+        user_id:
+          example: 1
+          type: integer
+        product_id:
+          example: 1
+          type: integer
+        quantity:
+          example: 2
+          type: integer
+        total_price:
+          example: 99.98
+          format: float
+          type: number
+        created_at:
+          example: 2024-03-20T08:30:00Z
+          format: date-time
+          type: string
+        product_name:
+          example: SUSTech Hoodie
+          type: string
+        user_name:
+          example: johndoe
+          type: string
+      type: object
+  securitySchemes:
+    BearerAuth:
+      bearerFormat: JWT
+      scheme: bearer
+      type: http
