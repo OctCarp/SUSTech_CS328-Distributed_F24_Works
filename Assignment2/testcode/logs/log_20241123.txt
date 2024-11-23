@@ -1,0 +1,46 @@
+2024-11-23T19:54:16.470392: {"level": "INFO", "service_name": "api server 1", "message": "[GET] /products 172.18.0.1 321ns", "timestamp": 1732362831, "trace_id": "default_id"}
+2024-11-23T19:54:16.471050: {"level": "INFO", "service_name": "api server 1", "message": "[GET] /products 172.18.0.1, response code: 200, message: List products success", "timestamp": 1732362831, "trace_id": "default_id"}
+2024-11-23T19:54:31.481925: {"level": "INFO", "service_name": "api server 2", "message": "[GET] /products 172.18.0.1 320ns", "timestamp": 1732362846, "trace_id": "default_id"}
+2024-11-23T19:54:31.483066: {"level": "INFO", "service_name": "api server 2", "message": "[GET] /products 172.18.0.1, response code: 200, message: List products success", "timestamp": 1732362846, "trace_id": "default_id"}
+2024-11-23T23:23:33.706801: {
+  "level": "INFO",
+  "service_name": "api server 1",
+  "message": "[GET] / 172.18.0.1 201ns",
+  "timestamp": 1732375357,
+  "trace_id": "default_id"
+}
+2024-11-23T23:23:33.707854: {
+  "level": "INFO",
+  "service_name": "api server 1",
+  "message": "[GET] / 172.18.0.1, response code: 200, message: Welcome to SUSTech Store API",
+  "timestamp": 1732375357,
+  "trace_id": "default_id"
+}
+2024-11-23T23:25:42.936858: {
+  "level": "INFO",
+  "service_name": "api server 2",
+  "message": "[GET] /products/1 172.18.0.1 251ns",
+  "timestamp": 1732375518,
+  "trace_id": "default_id"
+}
+2024-11-23T23:25:42.992552: {
+  "level": "INFO",
+  "service_name": "api server 2",
+  "message": "[GET] /products/1 172.18.0.1, response code: 200, message: Get product success",
+  "timestamp": 1732375518,
+  "trace_id": "default_id"
+}
+2024-11-23T23:26:38.201184: {
+  "level": "INFO",
+  "service_name": "api server 1",
+  "message": "[GET] /products 172.18.0.1 211ns",
+  "timestamp": 1732375573,
+  "trace_id": "default_id"
+}
+2024-11-23T23:26:38.223977: {
+  "level": "INFO",
+  "service_name": "api server 1",
+  "message": "[GET] /products 172.18.0.1, response code: 200, message: List products success",
+  "timestamp": 1732375598,
+  "trace_id": "default_id"
+}

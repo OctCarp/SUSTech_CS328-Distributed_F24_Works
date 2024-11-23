@@ -75,14 +75,19 @@ func (s *DatabaseService) CancelOrder(ctx context.Context, req *pb.CancelOrderRe
 		return nil, status.Errorf(codes.NotFound, "Order not found")
 	}
 
-	// 恢复库存
+	if order.UserID != req.UserId {
+		tx.Rollback()
+		return nil, status.Errorf(codes.PermissionDenied, "Cancel order Unauthorized")
+	}
+
+	// restore stock
 	if err := tx.Model(&models.Product{}).Where("id = ?", order.ProductID).
 		Update("stock", gorm.Expr("stock + ?", order.Quantity)).Error; err != nil {
 		tx.Rollback()
 		return nil, status.Errorf(codes.Internal, "Failed to restore stock")
 	}
 
-	// 删除订单
+	// delete order
 	if err := tx.Delete(&order).Error; err != nil {
 		tx.Rollback()
 		return nil, status.Errorf(codes.Internal, "Failed to cancel order")
@@ -104,7 +109,7 @@ func (s *DatabaseService) GetUserOrders(ctx context.Context, req *pb.GetUserRequ
 
 	pbUserOrders := make([]*pb.Order, len(orders))
 
-	// 转换为proto消息格式
+	// transform orders to protobuf message
 	for i, order := range orders {
 		pbUserOrders[i] = &pb.Order{
 			Id:          order.ID,

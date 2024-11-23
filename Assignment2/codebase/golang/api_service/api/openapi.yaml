@@ -546,11 +546,7 @@ components:
     UpdateUserRequest:
       example:
         email: newemail@mail.sustech.edu.cn
-        username: johndoe2
       properties:
-        username:
-          example: johndoe2
-          type: string
         email:
           example: newemail@mail.sustech.edu.cn
           format: email

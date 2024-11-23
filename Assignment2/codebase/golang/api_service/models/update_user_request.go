@@ -11,7 +11,5 @@
 package models
 
 type UpdateUserRequest struct {
-	Username string `json:"username,omitempty"`
-
 	Email string `json:"email,omitempty" validate:"regexp=^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}$"`
 }

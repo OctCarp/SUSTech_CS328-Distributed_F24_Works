@@ -90,6 +90,7 @@ message GetOrderRequest {
 
 message CancelOrderRequest {
   int32 order_id = 1;
+  int32 user_id = 2;
 }
 
 // Common response messages

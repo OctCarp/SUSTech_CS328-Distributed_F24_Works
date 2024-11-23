@@ -24,7 +24,7 @@ func main() {
 	grpcServer := grpc.NewServer()
 	dbpb.RegisterDatabaseServiceServer(grpcServer, service.NewDatabaseService(database))
 
-	log.Printf("Starting gRPC server on port 50051")
+	log.Printf("Starting gRPC server on port %d", config.GetConfig().Grpc.Port)
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}

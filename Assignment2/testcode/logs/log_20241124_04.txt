@@ -1,0 +1,154 @@
+2024-11-24T04:00:12.605857: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[GET] /products 127.0.0.1 0s",
+  "timestamp": 1732392012,
+  "trace_id": "default_id"
+}
+2024-11-24T04:00:12.606374: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[GET] /products 127.0.0.1, response code: 200, message: List products success",
+  "timestamp": 1732392012,
+  "trace_id": "default_id"
+}
+2024-11-24T04:01:47.548953: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[PUT] /users/<integer> 127.0.0.1 0s",
+  "timestamp": 1732392107,
+  "trace_id": "default_id"
+}
+2024-11-24T04:01:47.549963: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[PUT] /users/<integer> 127.0.0.1, response code: 400, message: BadRequest: Invalid user ID",
+  "timestamp": 1732392107,
+  "trace_id": "default_id"
+}
+2024-11-24T04:02:21.877801: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[PUT] /users/1 127.0.0.1 0s",
+  "timestamp": 1732392141,
+  "trace_id": "default_id"
+}
+2024-11-24T04:02:21.879480: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[PUT] /users/1 127.0.0.1, response code: 200, message: Update user successfully",
+  "timestamp": 1732392141,
+  "trace_id": "default_id"
+}
+2024-11-24T04:02:55.853885: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[GET] /users/1 127.0.0.1 0s",
+  "timestamp": 1732392175,
+  "trace_id": "default_id"
+}
+2024-11-24T04:02:55.854932: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[GET] /users/1 127.0.0.1, response code: 200, message: User retrieved successfully",
+  "timestamp": 1732392175,
+  "trace_id": "default_id"
+}
+2024-11-24T04:04:16.830494: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[DELETE] /orders/1 127.0.0.1 0s",
+  "timestamp": 1732392256,
+  "trace_id": "default_id"
+}
+2024-11-24T04:04:50.976757: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[GET] /orders/user/1 127.0.0.1 0s",
+  "timestamp": 1732392290,
+  "trace_id": "default_id"
+}
+2024-11-24T04:06:08.842589: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[POST] /users/register 127.0.0.1 0s",
+  "timestamp": 1732392368,
+  "trace_id": "default_id"
+}
+2024-11-24T04:06:08.896468: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[POST] /users/register 127.0.0.1, response code: 200, message: User created successfully",
+  "timestamp": 1732392368,
+  "trace_id": "default_id"
+}
+2024-11-24T04:06:51.996616: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[POST] /users/login 127.0.0.1 0s",
+  "timestamp": 1732392411,
+  "trace_id": "default_id"
+}
+2024-11-24T04:06:52.049911: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[POST] /users/login 127.0.0.1, response code: 200, message: Login successful",
+  "timestamp": 1732392412,
+  "trace_id": "default_id"
+}
+2024-11-24T04:07:31.669342: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[GET] /users/1 127.0.0.1 0s",
+  "timestamp": 1732392451,
+  "trace_id": "default_id"
+}
+2024-11-24T04:07:31.670356: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[GET] /users/1 127.0.0.1, response code: 401, message: Unauthorized Option",
+  "timestamp": 1732392451,
+  "trace_id": "default_id"
+}
+2024-11-24T04:09:22.367747: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[DELETE] /users/1 127.0.0.1 0s",
+  "timestamp": 1732392562,
+  "trace_id": "default_id"
+}
+2024-11-24T04:09:22.368758: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[DELETE] /users/1 127.0.0.1, response code: 401, message: Unauthorized Option",
+  "timestamp": 1732392562,
+  "trace_id": "default_id"
+}
+2024-11-24T04:10:14.784184: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[DELETE] /users/2 127.0.0.1 0s",
+  "timestamp": 1732392614,
+  "trace_id": "default_id"
+}
+2024-11-24T04:10:14.785355: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[DELETE] /users/2 127.0.0.1, response code: 200, message: User deactivated successfully",
+  "timestamp": 1732392614,
+  "trace_id": "default_id"
+}
+2024-11-24T04:11:04.291627: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[POST] /users/login 127.0.0.1 0s",
+  "timestamp": 1732392664,
+  "trace_id": "default_id"
+}
+2024-11-24T04:11:04.292692: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[POST] /users/login 127.0.0.1, response code: 404, message: Item not found in Database",
+  "timestamp": 1732392664,
+  "trace_id": "default_id"
+}

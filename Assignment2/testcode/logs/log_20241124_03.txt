@@ -1,0 +1,140 @@
+2024-11-24T03:42:18.333007: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[GET] / 127.0.0.1 0s",
+  "timestamp": 1732390938,
+  "trace_id": "default_id"
+}
+2024-11-24T03:42:18.334006: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[GET] / 127.0.0.1, response code: 200, message: Welcome to SUSTech Store API",
+  "timestamp": 1732390938,
+  "trace_id": "default_id"
+}
+2024-11-24T03:43:57.906080: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[GET] /products 127.0.0.1 0s",
+  "timestamp": 1732391037,
+  "trace_id": "default_id"
+}
+2024-11-24T03:43:57.958457: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[GET] /products 127.0.0.1, response code: 200, message: List products success",
+  "timestamp": 1732391037,
+  "trace_id": "default_id"
+}
+2024-11-24T03:45:32.046433: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[POST] /users/register 127.0.0.1 0s",
+  "timestamp": 1732391132,
+  "trace_id": "default_id"
+}
+2024-11-24T03:45:32.106711: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[POST] /users/register 127.0.0.1, response code: 200, message: User created successfully",
+  "timestamp": 1732391132,
+  "trace_id": "default_id"
+}
+2024-11-24T03:46:32.812696: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[POST] /users/login 127.0.0.1 0s",
+  "timestamp": 1732391192,
+  "trace_id": "default_id"
+}
+2024-11-24T03:46:32.818143: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[POST] /users/login 127.0.0.1, response code: 404, message: Item not found in Database",
+  "timestamp": 1732391192,
+  "trace_id": "default_id"
+}
+2024-11-24T03:47:30.662141: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[POST] /users/login 127.0.0.1 0s",
+  "timestamp": 1732391250,
+  "trace_id": "default_id"
+}
+2024-11-24T03:47:30.719096: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[POST] /users/login 127.0.0.1, response code: 401, message: Unauthorized Option",
+  "timestamp": 1732391250,
+  "trace_id": "default_id"
+}
+2024-11-24T03:48:18.212675: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[POST] /users/login 127.0.0.1 0s",
+  "timestamp": 1732391298,
+  "trace_id": "default_id"
+}
+2024-11-24T03:48:18.267379: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[POST] /users/login 127.0.0.1, response code: 200, message: Login successful",
+  "timestamp": 1732391298,
+  "trace_id": "default_id"
+}
+2024-11-24T03:49:21.499807: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[GET] /users/1 127.0.0.1 0s",
+  "timestamp": 1732391361,
+  "trace_id": "default_id"
+}
+2024-11-24T03:49:21.501433: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[GET] /users/1 127.0.0.1, response code: 200, message: User retrieved successfully",
+  "timestamp": 1732391361,
+  "trace_id": "default_id"
+}
+2024-11-24T03:49:46.235934: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[GET] /users/1 127.0.0.1 0s",
+  "timestamp": 1732391386,
+  "trace_id": "default_id"
+}
+2024-11-24T03:50:36.606918: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[GET] /users/1 127.0.0.1, response code: 200, message: User retrieved successfully",
+  "timestamp": 1732391436,
+  "trace_id": "default_id"
+}
+2024-11-24T03:56:56.313062: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[POST] /orders 127.0.0.1 0s",
+  "timestamp": 1732391816,
+  "trace_id": "default_id"
+}
+2024-11-24T03:58:39.667920: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[GET] /orders/user/1 127.0.0.1 0s",
+  "timestamp": 1732391919,
+  "trace_id": "default_id"
+}
+2024-11-24T03:59:13.955290: {
+  "level": "INFO",
+  "service_name": "api service 1",
+  "message": "[POST] /orders 127.0.0.1 0s",
+  "timestamp": 1732391953,
+  "trace_id": "default_id"
+}
+2024-11-24T03:59:18.534369: {
+  "level": "INFO",
+  "service_name": "api service 2",
+  "message": "[GET] /orders/user/1 127.0.0.1 0s",
+  "timestamp": 1732391958,
+  "trace_id": "default_id"
+}

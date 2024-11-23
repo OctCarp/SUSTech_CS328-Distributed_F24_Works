@@ -1,6 +1,10 @@
 package config
 
-import "sync"
+import (
+	"os"
+	"strconv"
+	"sync"
+)
 
 type Config struct {
 	Grpc struct {
@@ -29,11 +33,29 @@ func GetConfig() *Config {
 }
 
 func loadConfig(cfg *Config) {
-	cfg.Grpc.Port = 50051
+	// Load GRPC configurations
+	cfg.Grpc.Port = getEnvAsInt("GRPC_PORT", 50151)
 
-	cfg.DB.Host = "localhost"
-	cfg.DB.Port = 5432
-	cfg.DB.Name = "goodsstore"
-	cfg.DB.User = "dncc"
-	cfg.DB.Password = "dncc"
+	// Load DB configurations
+	cfg.DB.Host = getEnv("POSTGRES_HOST", "localhost")
+	cfg.DB.Port = getEnvAsInt("POSTGRES_PORT", 5432)
+	cfg.DB.Name = getEnv("POSTGRES_DB", "goodsstore")
+	cfg.DB.User = getEnv("POSTGRES_USER", "dncc")
+	cfg.DB.Password = getEnv("POSTGRES_PASSWORD", "dncc")
+}
+
+func getEnv(key string, defaultValue string) string {
+	if value, exists := os.LookupEnv(key); exists {
+		return value
+	}
+	return defaultValue
+}
+
+func getEnvAsInt(key string, defaultValue int) int {
+	if valueStr, exists := os.LookupEnv(key); exists {
+		if value, err := strconv.Atoi(valueStr); err == nil {
+			return value
+		}
+	}
+	return defaultValue
 }

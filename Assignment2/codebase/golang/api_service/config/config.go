@@ -1,23 +1,27 @@
 package config
 
-import "sync"
+import (
+	"os"
+	"strconv"
+	"sync"
+)
 
 type Config struct {
 	ServiceName string `yaml:"service_name" env:"SERVICE_NAME" default:"api_service"`
 
 	DbGrpc struct {
-		Server string `yaml:"server" env:"DB_GRPC_SERVER" default:"localhost"`
-		Port   int    `yaml:"port" env:"DB_GRPC_PORT" default:"50051"`
+		Server string `yaml:"server" env:"DB_SERVICE_HOST" default:"localhost"`
+		Port   int    `yaml:"port" env:"DB_SERVICE_PORT" default:"50051"`
 	}
 
 	LogGrpc struct {
-		Server string `yaml:"server" env:"LOG_GRPC_SERVER" default:"localhost"`
-		Port   int    `yaml:"port" env:"LOG_GRPC_PORT" default:"50052"`
+		Server string `yaml:"server" env:"LOGGING_SERVICE_HOST" default:"localhost"`
+		Port   int    `yaml:"port" env:"LOGGING_SERVICE_PORT" default:"50052"`
 	}
 
 	Api struct {
 		Host string `yaml:"host" env:"API_HOST" default:"localhost"`
-		Port int    `yaml:"port" env:"API_PORT" default:"10880"`
+		Port int    `yaml:"port" env:"API_PORT" default:"8080"`
 	}
 }
 
@@ -35,14 +39,30 @@ func GetConfig() *Config {
 }
 
 func loadConfig(cfg *Config) {
-	cfg.ServiceName = "api_service"
+	cfg.ServiceName = getEnv("SERVICE_NAME", "api_service")
 
-	cfg.DbGrpc.Server = "localhost"
-	cfg.DbGrpc.Port = 50051
+	cfg.DbGrpc.Server = getEnv("DB_SERVICE_HOST", "localhost")
+	cfg.DbGrpc.Port = getEnvAsInt("DB_SERVICE_PORT", 50151)
 
-	cfg.LogGrpc.Server = "localhost"
-	cfg.LogGrpc.Port = 50052
+	cfg.LogGrpc.Server = getEnv("LOGGING_SERVICE_HOST", "localhost")
+	cfg.LogGrpc.Port = getEnvAsInt("LOGGING_SERVICE_PORT", 50152)
 
-	cfg.Api.Host = "localhost"
-	cfg.Api.Port = 9997
+	cfg.Api.Host = getEnv("API_HOST", "localhost")
+	cfg.Api.Port = getEnvAsInt("API_PORT", 15001)
+}
+
+func getEnv(key string, defaultValue string) string {
+	if value, exists := os.LookupEnv(key); exists {
+		return value
+	}
+	return defaultValue
+}
+
+func getEnvAsInt(key string, defaultValue int) int {
+	if valueStr, exists := os.LookupEnv(key); exists {
+		if value, err := strconv.Atoi(valueStr); err == nil {
+			return value
+		}
+	}
+	return defaultValue
 }

@@ -2,6 +2,14 @@
 -- numeric types and SERIAL: https://www.postgresql.org/docs/current/datatype-numeric.html
 -- CHECK (): https://www.postgresql.org/docs/17/ddl-constraints.html#DDL-CONSTRAINTS-CHECK-CONSTRAINTS
 -- REFERENCES table_name(column_name) ON DELETE CASCADE: https://www.postgresql.org/docs/17/ddl-constraints.html#DDL-CONSTRAINTS-FK
+
+\c "POSTGRES_DB"
+
+
+GRANT ALL ON SCHEMA public TO "POSTGRES_USER";
+
+DROP TABLE IF EXISTS products, users, orders;
+
 -- Create the products table
 CREATE TABLE products (
   id SERIAL PRIMARY KEY,

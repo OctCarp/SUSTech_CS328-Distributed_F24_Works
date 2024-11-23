@@ -7,7 +7,8 @@ import (
 
 var secretKey = []byte("cs328-secret-key")
 
-func GenerateToken(userId uint) (string, error) {
+func GenerateToken[T ~int | ~int32](userId T) (string, error) {
+	// use user Id, generate a 24-hour token
 	claims := jwt.MapClaims{
 		"user_id": userId,
 		"exp":     time.Now().Add(time.Hour * 24).Unix(),
@@ -17,8 +18,12 @@ func GenerateToken(userId uint) (string, error) {
 	return token.SignedString(secretKey)
 }
 
-func ParseToken(tokenString string) (uint, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+func ParseToken(tokenString string) (int, error) {
+	token, err := jwt.ParseWithClaims(tokenString, jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
+		// Check the signing method
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, jwt.ErrSignatureInvalid
+		}
 		return secretKey, nil
 	})
 
@@ -26,8 +31,9 @@ func ParseToken(tokenString string) (uint, error) {
 		return 0, err
 	}
 
+	// From the token get the user id
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		userId := uint(claims["token_user_id"].(float64))
+		userId := int(claims["user_id"].(float64))
 		return userId, nil
 	}
 

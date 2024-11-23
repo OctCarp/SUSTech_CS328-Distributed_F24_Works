@@ -32,7 +32,8 @@ func (api *UsersAPI) DeactivateUser(c *gin.Context) {
 	}
 
 	tokenId, exists := c.Get("token_user_id")
-	if !(exists && userID != tokenId) {
+	if !(exists && userID == tokenId) {
+		// token_user_id != request related user_id
 		utils.SendUnauthorizedErr(c)
 		return
 	}
@@ -43,7 +44,7 @@ func (api *UsersAPI) DeactivateUser(c *gin.Context) {
 	res, err := dbclient.GetDbClient().DeactivateUser(c.Request.Context(), req)
 
 	if err != nil {
-		utils.SendDbErr(c, err.Error())
+		utils.HandleDbErr(c, err)
 		return
 	}
 
@@ -59,7 +60,7 @@ func (api *UsersAPI) GetUser(c *gin.Context) {
 	}
 
 	tokenId, exists := c.Get("token_user_id")
-	if !(exists && userID != tokenId) {
+	if !(exists && userID == tokenId) {
 		utils.SendUnauthorizedErr(c)
 		return
 	}
@@ -70,7 +71,7 @@ func (api *UsersAPI) GetUser(c *gin.Context) {
 	res, err := dbclient.GetDbClient().GetUser(c.Request.Context(), req)
 
 	if err != nil {
-		utils.SendDbErr(c, err.Error())
+		utils.HandleDbErr(c, err)
 		return
 	}
 
@@ -100,7 +101,7 @@ func (api *UsersAPI) LoginUser(c *gin.Context) {
 	user, err := dbclient.GetDbClient().GetUserByUsername(c.Request.Context(), req)
 
 	if err != nil {
-		utils.SendDbErr(c, err.Error())
+		utils.HandleDbErr(c, err)
 		return
 	}
 
@@ -109,12 +110,14 @@ func (api *UsersAPI) LoginUser(c *gin.Context) {
 		return
 	}
 
+	// password verification
 	if !utils.CheckPassword(loginReq.Password, user.PasswordHash) {
 		utils.SendUnauthorizedErr(c)
 		return
 	}
 
-	token, err := utils.GenerateToken(uint(user.Id))
+	// use User Id to generate token
+	token, err := utils.GenerateToken(user.Id)
 	if err != nil {
 		utils.SendInternalErr(c, "Failed to generate token")
 		return
@@ -150,7 +153,7 @@ func (api *UsersAPI) RegisterUser(c *gin.Context) {
 
 	res, err := dbclient.GetDbClient().CreateUser(c.Request.Context(), req)
 	if err != nil {
-		utils.SendDbErr(c, err.Error())
+		utils.HandleDbErr(c, err)
 		return
 	}
 
@@ -166,14 +169,12 @@ func (api *UsersAPI) UpdateUser(c *gin.Context) {
 	}
 
 	tokenId, exists := c.Get("token_user_id")
-	if !(exists && userID != tokenId) {
+	if !(exists && userID == tokenId) {
 		utils.SendUnauthorizedErr(c)
 		return
 	}
 
-	var updateReq struct {
-		Email string `json:"email" binding:"required,email"`
-	}
+	var updateReq models.UpdateUserRequest
 
 	if err := c.ShouldBindJSON(&updateReq); err != nil {
 		utils.SendBadRequestErr(c, "Invalid request body")
@@ -187,7 +188,7 @@ func (api *UsersAPI) UpdateUser(c *gin.Context) {
 
 	res, err := dbclient.GetDbClient().UpdateUser(c.Request.Context(), req)
 	if err != nil {
-		utils.SendDbErr(c, err.Error())
+		utils.HandleDbErr(c, err)
 		return
 	}
 

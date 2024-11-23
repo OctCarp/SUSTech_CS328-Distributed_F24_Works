@@ -23,30 +23,36 @@ import (
 type ProductsAPI struct {
 }
 
-// GetProduct Get /products/:id
-// Get product by ID
+// GetProduct handles GET /products/:id endpoint to retrieve product details by ID
 func (api *ProductsAPI) GetProduct(c *gin.Context) {
+	// Parse and validate product ID from URL parameter
 	productID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		utils.SendBadRequestErr(c, "Invalid product ID")
 		return
 	}
 
+	// Prepare database gRPC request
 	req := &dbpb.GetProductRequest{
 		ProductId: int32(productID),
 	}
+
+	// Get gPRC response information from database service
 	res, err := dbclient.GetDbClient().GetProduct(c.Request.Context(), req)
 
+	// Handle database errors
 	if err != nil {
 		utils.SendDbErr(c, err.Error())
 		return
 	}
 
+	// Handle case when product is not found
 	if res == nil {
 		utils.SendNotFoundErr(c)
 		return
 	}
 
+	// Convert database response to API response model
 	product := models.Product{
 		Id:          res.Id,
 		Name:        res.Name,
@@ -58,7 +64,10 @@ func (api *ProductsAPI) GetProduct(c *gin.Context) {
 		CreatedAt:   res.CreatedAt,
 	}
 
+	// Send logging gRPC message
 	utils.ResponseLog(c, http.StatusOK, "Get product success")
+
+	//Return successful response to RESTful client
 	c.JSON(http.StatusOK, product)
 }
 

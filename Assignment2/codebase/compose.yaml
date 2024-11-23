@@ -1,4 +1,4 @@
-# https://docs.docker.com/reference/compose-file/
+version: "3.9"
 services:
   # database for persistant data storage
   postgres:
@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432"   # Expose PostgreSQL to localhost ("local:container")
+      - 5433:${POSTGRES_PORT}   # Expose PostgreSQL to localhost ("local:container")
     volumes:
       - pg_data:/var/lib/postgresql/data        # default PGDATA location: /var/lib/postgresql/data
       - ./db-init:/docker-entrypoint-initdb.d   # init run all scripts by default in: /docker-entrypoint-initdb.d
@@ -25,6 +25,8 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - kafka-network
 
   kafka:
     # https://hub.docker.com/r/confluentinc/cp-kafka
@@ -35,24 +37,105 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9092,OUTSIDE://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://localhost:9091,OUTSIDE://localhost:9092
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"  # For internal Docker use
+      - "9092:9092" # For internal access
       - "9093:9093"  # For external access
+    networks:
+      - kafka-network
 
-  kafka-topic-creator:
-    image: confluentinc/cp-kafka:7.7.1
+
+  # Logging Service
+  logging_service:
+    build:
+      context: ./python/logging_service
+      dockerfile: Dockerfile
+    container_name: logging_service
     depends_on:
       - kafka
-    entrypoint: >
-      bash -c "
-      /bin/kafka-topics --create --topic log-channel --bootstrap-server kafka:9092 --partitions 1 --replication-factor 1;
-      "
+    environment:
+      KAFKA_BROKER: kafka:9091
+      GRPC_PORT: 50052
+    ports:
+      - "50052:50052"
+
+  # DB Service
+  db_service:
+    build:
+      context: ./golang
+      dockerfile: db_service/Dockerfile
+    container_name: db_service
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      GRPC_PORT: 50051
+    ports:
+      - "50051:50051"
+
+  api_service_build:
+    build:
+      context: ./golang
+      dockerfile: api_service/Dockerfile
+    image: api_service_image
+    profiles:
+      - build-only
+
+  # API Service 1
+  api_service_1:
+    image: api_service_image
+    container_name: "api_service_1"
+    depends_on:
+      - db_service
+      - logging_service
+    environment:
+      SERVICE_NAME: "api service 1"
+      API_HOST: "0.0.0.0"
+      API_PORT: 5000
+      DB_SERVICE_HOST: db_service
+      DB_SERVICE_PORT: 50051
+      LOGGING_SERVICE_HOST: logging_service
+      LOGGING_SERVICE_PORT: 50052
+
+  # API Service 2
+  api_service_2:
+    image: api_service_image
+    container_name: "api_service_2"
+    depends_on:
+      - db_service
+      - logging_service
+    environment:
+      SERVICE_NAME: "api service 2"
+      API_HOST: "0.0.0.0"
+      API_PORT: 5000
+      DB_SERVICE_HOST: db_service
+      DB_SERVICE_PORT: 50051
+      LOGGING_SERVICE_HOST: logging_service
+      LOGGING_SERVICE_PORT: 50052
+
+  nginx:
+    image: nginx:1.24.0
+    container_name: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - api_service_1
+      - api_service_2
 
 volumes:
-  pg_data:  # A placeholder volume without any configuration
+  pg_data:
+
+networks:
+  kafka-network:
+    driver: bridge

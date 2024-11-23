@@ -7,13 +7,13 @@ import json
 
 from config import Config
 import glog_pb2
-from python.logging_service import glog_pb2_grpc
+import glog_pb2_grpc
 
 
 class LoggingService(glog_pb2_grpc.LoggingServiceServicer):
     def __init__(self, kafka_config):
         self.producer = Producer(kafka_config)
-        self.topic = 'log-channel'
+        self.topic = "log-channel"  # kafka topic
 
     def publish_to_kafka(self, log_message):
         try:
@@ -45,17 +45,22 @@ class LoggingService(glog_pb2_grpc.LoggingServiceServicer):
 
     def StreamLogs(self, request_iterator, context):
         try:
+            # Iterate through each log message sent by the client
             for log_message in request_iterator:
+                # Publish each log to Kafka
                 success = self.publish_to_kafka(log_message)
 
+                # If publishing fails, return error response immediately
                 if not success:
                     return glog_pb2.LogResponse(
                         success=False,
                         message="Failed to publish logs to Kafka"
                     )
 
+            # After processing all messages, ensure they are sent to Kafka
             self.producer.flush()
 
+            # Return success response
             return glog_pb2.LogResponse(
                 success=True,
                 message="Successfully processed all logs"

@@ -11,6 +11,7 @@
 package v1
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"octcarp/sustech/cs328/a2/api/grpc/dbclient"
@@ -32,7 +33,7 @@ func (api *OrdersAPI) CancelOrder(c *gin.Context) {
 	}
 
 	// Check authorization
-	_, exists := c.Get("token_user_id")
+	tokenId, exists := c.Get("token_user_id")
 	if !exists {
 		utils.SendUnauthorizedErr(c)
 		return
@@ -40,11 +41,13 @@ func (api *OrdersAPI) CancelOrder(c *gin.Context) {
 
 	req := &dbpb.CancelOrderRequest{
 		OrderId: int32(orderID),
+		UserId:  int32(tokenId.(int)),
 	}
+
 	res, err := dbclient.GetDbClient().CancelOrder(c.Request.Context(), req)
 
 	if err != nil {
-		utils.SendDbErr(c, err.Error())
+		utils.HandleDbErr(c, err)
 		return
 	}
 
@@ -60,7 +63,7 @@ func (api *OrdersAPI) GetOrder(c *gin.Context) {
 	}
 
 	// Check authorization
-	_, exists := c.Get("token_user_id")
+	tokenId, exists := c.Get("token_user_id")
 	if !exists {
 		utils.SendUnauthorizedErr(c)
 		return
@@ -72,7 +75,12 @@ func (api *OrdersAPI) GetOrder(c *gin.Context) {
 	res, err := dbclient.GetDbClient().GetOrder(c.Request.Context(), req)
 
 	if err != nil {
-		utils.SendDbErr(c, err.Error())
+		utils.HandleDbErr(c, err)
+		return
+	}
+
+	if res.UserId != int32(tokenId.(int)) {
+		utils.SendUnauthorizedErr(c)
 		return
 	}
 
@@ -134,9 +142,9 @@ func (api *OrdersAPI) GetUserOrdersById(c *gin.Context) {
 		return
 	}
 
-	// 验证用户认证
-	_, exists := c.Get("token_user_id")
-	if !exists {
+	tokenId, exists := c.Get("token_user_id")
+	if !(exists && userID == tokenId) {
+		fmt.Sprintf("userID: %d, tokenId: %d", userID, tokenId)
 		utils.SendUnauthorizedErr(c)
 		return
 	}
@@ -147,7 +155,7 @@ func (api *OrdersAPI) GetUserOrdersById(c *gin.Context) {
 
 	res, err := dbclient.GetDbClient().GetUserOrders(c.Request.Context(), req)
 	if err != nil {
-		utils.SendDbErr(c, err.Error())
+		utils.HandleDbErr(c, err)
 		return
 	}
 
