@@ -12,7 +12,7 @@
 
 ### Distributed Idea
 
-![Parallel_Matrix_Multiplication](img\Parallel_Matrix_Multiplication.png)
+![Parallel_Matrix_Multiplication](img/Parallel_Matrix_Multiplication.png)
 
 Just follow the instruction, I implemented my distributed idea in the following way: I divided the $A$ matrix into rows and distributed some rows of $A$ to different distributed computing units; and the entire content of the $B$ matrix was distributed to the computing units.
 

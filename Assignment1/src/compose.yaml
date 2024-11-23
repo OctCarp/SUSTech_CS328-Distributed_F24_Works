@@ -1,6 +1,6 @@
 services:
   node1:
-    image: mpi1
+    image: a1-mpi1
     container_name: node1
     hostname: node1
     # specify which virtual network this container will belong to
@@ -15,7 +15,7 @@ services:
       - ./mpi_files:/home/mpi/mpi_files/
 
   node2:
-    image: mpi1
+    image: a1-mpi1
     container_name: node2
     hostname: node2
     networks:
@@ -27,7 +27,7 @@ services:
       - ./mpi_files:/home/mpi/mpi_files/
 
   node3:
-    image: mpi1
+    image: a1-mpi1
     container_name: node3
     hostname: node3
     networks:

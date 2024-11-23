@@ -1,0 +1,5 @@
+### python ###
+*.py[cod]
+*.pyo
+*.pyd
+__pycache__/
