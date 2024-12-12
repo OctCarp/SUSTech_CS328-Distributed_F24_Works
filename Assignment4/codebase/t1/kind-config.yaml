@@ -1,0 +1,13 @@
+# a 4-node k8s cluster (1 control plane + 3 worker nodes)
+# Labels for workers:
+# 1. usage: normal
+# 2. usage: normal; capability: powerful
+# 3. usage: normal; capability: powerful
+# 4. usage: backup
+# 5. usage: backup
+# Taints for workers:
+# 1. NONE
+# 2. NONE
+# 3. if the pod does not tolerate class=vip, then it cannot be scheduled here
+# 4. NONE
+# 5. NONE

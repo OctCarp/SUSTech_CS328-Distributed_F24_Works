@@ -1,0 +1,2 @@
+# 1 deployment - 4 pod replicas - 1 flask server per pod
+# 1 service to expose the deployment above

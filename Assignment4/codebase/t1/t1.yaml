@@ -1,0 +1,6 @@
+# 1 deployment - 1~5 pod replicas - 1 flask server per pod
+# 1 service to expose the deployment above
+# constraints:
+# pod anti-affinity: pod replicas distributed to different nodes
+# preferred weighted node affinity: (1) powerful nodes; (2) non-backup nodes; (3) backup nodes
+# (EXTRA) how to deploy pods to nodes with taints?
