@@ -1,6 +1,0 @@
-The parking_data_sz.csv file is about 86 MiB, so I ignore it
-
-The format of the data (csv header and first line) just like:
-
-out_time,admin_region,in_time,berthage,section
-"2018-09-01 12:00:00","南山区","2018-09-01 10:10:00","201091","荔园路(蛇口西段)"

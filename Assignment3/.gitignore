@@ -1,1 +1,6 @@
 data/*.csv
+
+!data/r1.csv
+!data/r2.csv
+!data/r3.csv
+!data/r4.csv

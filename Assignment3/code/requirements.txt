@@ -1,0 +1,7 @@
+# main packages
+pyspark~=3.5.3
+ipykernel~=6.29.5
+
+# for task 5 subtask only
+matplotlib~=3.9
+pandas~=2.2.3
