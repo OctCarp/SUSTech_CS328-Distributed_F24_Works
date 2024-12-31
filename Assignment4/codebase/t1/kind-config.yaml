@@ -11,3 +11,35 @@
 # 3. if the pod does not tolerate class=vip, then it cannot be scheduled here
 # 4. NONE
 # 5. NONE
+
+# codebase/t1/kind-config.yaml
+
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+- role: worker
+  labels:
+    usage: normal
+- role: worker
+  labels:
+    usage: normal
+    capability: powerful
+- role: worker
+  kubeadmConfigPatches:
+  - |
+    kind: JoinConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        # no tier label
+        node-labels: "usage=normal,capability=powerful"
+      taints:
+      - key: class
+        value: vip
+        effect: NoSchedule
+- role: worker
+  labels:
+    usage: backup
+- role: worker
+  labels:
+    usage: backup

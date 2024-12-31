@@ -1,1 +1,11 @@
 # a 4-node k8s cluster (1 control plane + 3 worker nodes)
+
+# codebase/t0/kind-config.yaml
+
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+  - role: worker
+  - role: worker
+  - role: worker

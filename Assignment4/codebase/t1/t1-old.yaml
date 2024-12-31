@@ -1,0 +1,80 @@
+# 1 deployment - 1~5 pod replicas - 1 flask server per pod
+# 1 service to expose the deployment above
+# constraints:
+# pod anti-affinity: pod replicas distributed to different nodes
+# preferred weighted node affinity: (1) powerful nodes; (2) non-backup nodes; (3) backup nodes
+# (EXTRA) how to deploy pods to nodes with taints?
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: a4t1-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: a4t1
+  template:
+    metadata:
+      labels:
+        app: a4t1
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - a4t1
+            topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: capability
+                operator: In
+                values:
+                - powerful
+          - weight: 50
+            preference:
+              matchExpressions:
+              - key: usage
+                operator: NotIn
+                values:
+                - backup
+      # tolerations:
+      # - key: "class"
+      #   operator: "Equal"
+      #   value: "vip"
+      #   effect: "NoSchedule"
+      containers:
+      - name: flask-container
+        image: octcarp/sustech-cs328:a4-flask-new
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: a4t1-service
+spec:
+  selector: # this service manages pods with this label only 
+    app: a4t1
+  ports:
+    - protocol: TCP
+      port: 80 # port for the service
+      targetPort: 5000 # port that the pods are listening on
+  type: ClusterIP # Service accessible only within the cluster
